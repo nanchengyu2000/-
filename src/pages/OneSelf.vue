@@ -2,7 +2,7 @@
   <div class="exhibition">
     <div class="top">
       <div class="image">
-        <img :src="'http://localhost:8082/public/'+oneself.image" alt="" />
+        <img :src="oneself.image" alt="" />
         <span class="upload" @click="Upload">
           <input type="file" ref="upload" @change="uploadImage" style="display: none;">
           <i class="iconfont icon-xiangji"  :style="{ fontSize: '45px'}"></i>
@@ -149,6 +149,7 @@ export default {
         }
       }).then(response=>{
         if (response!={}) {
+          response.image=process.env.VUE_APP_Header+response.image
           this.oneself=response
         }
       })
@@ -173,7 +174,7 @@ export default {
               message:"上传失败"
             })
           }else{
-            this.oneself.image=response.path
+            this.oneself.image=process.env.VUE_APP_Header+response.path
           }
         })
       event.target.value = '';

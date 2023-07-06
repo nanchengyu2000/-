@@ -75,11 +75,12 @@ export default {
 }
 .card {
   width: 160px;
-  height: 160px;
+  border-radius: 10px;
+  /* height: 160px; */
   overflow: hidden;
 }
 .activeCard {
-  border-radius: 10px;
+  /* border-radius: 10px; */
   border: 3px solid seagreen ;
 }
 .card .title {

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // 创建 Axios 实例
 const api = axios.create({
-  baseURL: 'http://localhost:8082', // 设置基本请求 URL
+  baseURL: process.env.VUE_APP_serve, // 设置基本请求 URL
   timeout: 5000, // 设置请求超时时间
 });
 

@@ -15,7 +15,7 @@
         <el-dropdown>
           <div class="after" v-if="isLogin">
             <span>
-              <img :src="'http://localhost:8082/public/'+oneself.image" alt="">
+              <img :src="oneself.image" alt="">
             </span>
           </div>
           <el-dropdown-menu slot="dropdown">
@@ -62,6 +62,7 @@ export default {
         }
       }).then(response=>{
         if (response!={}) {
+          response.image=process.env.VUE_APP_Header+response.image
           this.oneself=response
         }
       })
