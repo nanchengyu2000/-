@@ -14,22 +14,23 @@
       </el-main>
       <el-aside>
         <div class="forward">
-          <div class="context" ref="dynamicContainer1">
-            <div
-              style="height:200px;background-color:#fff;overflow: hidden;overflow-y: auto;"
-              v-html="building"
-              ref="context1"
-            >
-            </div>
-          </div>
+          <p>正向：</p>
+          <Collapsemin
+            v-for="(item, index) in buildingtype"
+            :type="item"
+            :menuObjects="buildings[item]"
+            :key="index"
+            :click="click"
+          />
           <div class="option">
             <span>
               <el-button
                 id="first"
                 type="info"
-                @click="copyText2('#first')"
+                @click="copyText('#first')"
                 icon="el-icon-document-copy"
                 plain
+                :data-clipboard-text="buildingString"
                 :round="false"
                 >复制</el-button
               >
@@ -37,21 +38,21 @@
           </div>
         </div>
         <div class="reverse">
-          <div class="context" ref="dynamicContainer">
-            <div
-              style="height:200px;background-color:#fff;overflow: hidden;overflow-y: auto;"
-              v-html="Reversebuilding"
-              ref="context2"
-            >
-            </div>
-            
-          </div>
+          <p>反向：</p>
+          <Collapsemin
+            v-for="(item, index) in Reversebuildingtype"
+            :type="item"
+            :menuObjects="Reversebuildings[item]"
+            :key="index"
+            :click="click"
+          />
           <div class="option">
             <span>
               <el-button
                 id="second"
                 type="info"
-                @click="copyText('#second', Reversebuilding)"
+                @click="copyText('#second')"
+                :data-clipboard-text="ReversebuildingString"
                 icon="el-icon-document-copy"
                 plain
                 >复制</el-button
@@ -66,6 +67,7 @@
 
 <script>
 import Collapse from "../components/Collapse.vue";
+import Collapsemin from "../components/Collapsemin.vue";
 import Operate from "../util/Operate";
 import { mapState } from "vuex";
 import { Message } from "element-ui";
@@ -74,6 +76,7 @@ export default {
   name: "TestHome",
   components: {
     Collapse,
+    Collapsemin
   },
   data() {
     return {
@@ -90,21 +93,25 @@ export default {
   computed: {
     ...mapState(["building"]),
     ...mapState(["Reversebuilding"]),
+    ...mapState(["buildingString"]),
+    ...mapState(["ReversebuildingString"]),
     data(){ 
-      if (typeof this.menuObjects === 'object' && this.menuObjects !== null) {
-            const categorizedData =this.menuObjects.reduce((result, item) => {
-            if (!result[item.type]) {
-              result[item.type] = [];
-            }
-            result[item.type].push(item);
-            return result
-      }, {});
-      return categorizedData
-      }
-      return {}
+      return this.getdatabytype(this.menuObjects)
     },
     types(){
       return Object.keys(this.data)
+    },
+    buildings(){
+      return this.getdatabytype(this.building)
+    },
+    buildingtype(){
+      return Object.keys(this.buildings)
+    },
+    Reversebuildings(){
+      return this.getdatabytype(this.Reversebuilding)
+    },
+    Reversebuildingtype(){
+      return Object.keys(this.Reversebuildings)
     }
   },
   mounted() {
@@ -176,10 +183,7 @@ export default {
       Operate.handle(this, value);
     },
     copyText(select) {
-      let value=this.$refs.context2.innerText
-      const clipboard = new Clipboard(select, {
-        text: () => value,
-      });
+      const clipboard = new Clipboard(select);
       clipboard.on("success", () => {
         Message.success({
           message: "复制成功！",
@@ -196,27 +200,19 @@ export default {
         clipboard.destroy();
       });
     },
-    copyText2(select) {
-      let value=this.$refs.context1.innerText
-      const clipboard = new Clipboard(select, {
-        text: () => value,
-      });
-      clipboard.on("success", () => {
-        Message.success({
-          message: "复制成功！",
-          type: "success",
-        });
-        clipboard.destroy();
-      });
-
-      clipboard.on("error", () => {
-        Message.error({
-          message: "复制成功！",
-          type: "error",
-        });
-        clipboard.destroy();
-      });
-    },
+    getdatabytype(value){
+      if (typeof value === 'object' && value !== null) {
+            const categorizedData =value.reduce((result, item) => {
+            if (!result[item.type]) {
+              result[item.type] = [];
+            }
+            result[item.type].push(item);
+            return result
+      }, {});
+      return categorizedData
+      }
+      return {}
+    }
   },
   }
 </script>
@@ -232,14 +228,15 @@ export default {
   height: 100%;
 }
 .big-box .el-aside {
-  width: 200px;
-  position: fixed;
+  width: 400px !important;
+  /* position: fixed;
   right: 50px;
-  height: 500px;
+  height: 500px; */
   /* display: flex;
   flex-flow: column; */
 }
 .big-box .el-aside .forward {
+  width: 100%;
   margin-bottom: 10px;
 }
 .big-box .el-aside .forward .context {
@@ -266,7 +263,7 @@ export default {
 }
 .big-box .select {
   margin-top: 20px;
-  width: 77%;
+  width: 70%;
   /* height: auto; */
   display: flex;
   flex-flow: column;

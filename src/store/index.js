@@ -8,27 +8,32 @@ Vue.use(Vuex)
 // 新建并暴露store
 export default new Vuex.Store({
   state:{
-    building:"",
-    Reversebuilding:"",
+    building:[],
+    buildingString:"",
+    ReversebuildingString:"",
+    Reversebuilding:[],
     Label:[],
     activeCard:function activeCard(){},
-    scrollToChild:function scrollToChild(){},
   },
   mutations:{
     append(state,node){
       linkedList.append(node)
-      state.building=linkedList.printObverse()
-      state.Reversebuilding=linkedList.printReverse()
+      state.building=linkedList.getLable(true)
+      state.buildingString=linkedList.printObverse()
+      state.ReversebuildingString=linkedList.printReverse()
+      state.Reversebuilding=linkedList.getLable(false)
     },
     remove(state,node){
       linkedList.remove(node)
-      state.building=linkedList.printObverse()
-      state.Reversebuilding=linkedList.printReverse()
+      state.building=linkedList.getLable(true)
+      state.Reversebuilding=linkedList.getLable(false)
+      state.buildingString=linkedList.printObverse()
+      state.ReversebuildingString=linkedList.printReverse()
     },
-    changeValue(state,node){
-        linkedList.changeValue(node.oldtheme,node.theme)
-        state.building=linkedList.printObverse()
-    },
+    // changeValue(state,node){
+    //     linkedList.changeValue(node.oldtheme,node.theme)
+    //     state.building=linkedList.printObverse()
+    // },
     setLabel(state,value){
       state.Label=value
     },
@@ -36,8 +41,10 @@ export default new Vuex.Store({
       state.activeCard=value
     },
     update(state){
-      state.building=linkedList.printObverse()
-      state.Reversebuilding=linkedList.printReverse()
+      state.building=linkedList.getLable(true)
+      state.Reversebuilding=linkedList.getLable(false)
+      state.buildingString=linkedList.printObverse()
+      state.ReversebuildingString=linkedList.printReverse()
     }
   },
   getters:{

@@ -8,6 +8,9 @@ class Node {
 
 // 链表类
 class LinkedList {
+  static FORWARD=true;
+  static REVERSE=false
+
   constructor() {
     this.head = null;
     this.tail = null;
@@ -79,13 +82,12 @@ class LinkedList {
     let value = "/imagine prompt:";
     while (currentNode) {
       if (currentNode.value.sort=="正向") {
-        const type = "data-custom-attr="+currentNode.value.type+"";
         if (currentNode.value.weight>0) {   //具有正权重
-          value+="<span class='title' "+type+">("+currentNode.value.English+":"+currentNode.value.weight+")</span>,"
+          value+="("+currentNode.value.English+":"+currentNode.value.weight+"),"
         }else if(currentNode.value.weight<0){ //具有负权重
-          value+="<span class='title' "+type+">["+currentNode.value.English+":"+currentNode.value.weight+"]</span>,"
+          value+="["+currentNode.value.English+":"+currentNode.value.weight+"],"
         }else {
-          value+="<span class='title' "+type+">"+currentNode.value.English+"</span>,";
+          value+=currentNode.value.English+",";
         }
       }else if(currentNode.value.item!=undefined){
         value+=currentNode.value.newValue+","
@@ -100,13 +102,12 @@ class LinkedList {
     let value = "";
     while (currentNode) {
       if (currentNode.value.sort=="反向") {
-        const type = "data-custom-attr="+currentNode.value.type+"";
         if (currentNode.value.weight>0) {   //具有正权重
-          value+="<span class='title' "+type+">("+currentNode.value.English+":"+currentNode.value.weight+")</span>,"
+          value+="("+currentNode.value.English+":"+currentNode.value.weight+"),"
         }else if(currentNode.value.weight<0){ //具有负权重
-          value+="<span class='title' "+type+">["+currentNode.value.English+":"+currentNode.value.weight+"]</span>,"
+          value+="["+currentNode.value.English+":"+currentNode.value.weight+"],"
         }else {
-          value+="<span class='title' "+type+">"+currentNode.value.English+"</span>,";
+          value+=currentNode.value.English+",";
         }
       }
         currentNode = currentNode.next;
@@ -114,13 +115,18 @@ class LinkedList {
     return value;
   }
   //获得lable的数组
-  getLable(){
+  getLable(flag){  //value是true表示返回正向选择，为false表示返回反向标签
     let currentNode = this.head;
     let value = [];
     while (currentNode) {
-      if (typeof currentNode.value ==='object'&&currentNode.value!==null&&currentNode.value.url!=null) {
-        console.log(currentNode.value);
-        value.push(currentNode.value)
+      if (flag) {
+        if (currentNode.value.sort=="正向") {
+          value.push(currentNode.value)
+        }
+      }else{
+        if(currentNode.value.sort=="反向"){
+          value.push(currentNode.value)
+        }
       }
       currentNode = currentNode.next;
     }
